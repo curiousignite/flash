@@ -1,5 +1,7 @@
 <html>
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
     <title>Flash App</title>
@@ -10,7 +12,7 @@
       <!-- 1. flex -->
       <div  id="flex1">
         <textarea id="ta" autofocus="1" placeholder="Enter your text here."></textarea>
-        <input type="file" onchange="loadFile(this.files[0])">
+        <input type="file" onchange="loadFile(this.files[0])" value="">
         <div class="slidecontainer">
           <p id="speed"><b>Speed:</b></p>
           <input
@@ -22,8 +24,10 @@
             id="slider"
             onchange="getWPM()"
           /><BR></BR>
-          <input id="wpm" value =800 onchange="setWPM()"><BR></BR>
-          <button id="submit" onclick="submit()">Submit</button>
+          <input id="wpm" value=800 onchange="setWPM()"><BR></BR>
+        </div>
+        <div class="buttonContainer">
+          <button id="submit" onclick="submit()">Start</button>
           <button id="stop" onclick="stop()">Stop</button>
         </div>
       </div>
@@ -32,146 +36,5 @@
         <canvas id="cvs"> Hello</canvas><BR></BR>
       </div>
     </div>
-    <script>
-      let cvs = document.getElementById("cvs");
-      var STATE = "";
-      var i = null;
-      var slider = null;
-      var speed = null;
-
-      function submit() {
-        if(STATE === "" || STATE=== "STOPPED"){
-          slider = document.getElementById("slider").value;
-          speed = Math.floor(60000 / slider);
-          console.log("worked");
-          var textarea = document.getElementById("ta");
-          var text = textarea.value;
-          STATE = "RUNNING";
-          words = [];
-          words = text.split(" ");
-          write();
-        }
-      } 
-      async function write() {
-        var cvs = document.getElementById("cvs");
-        var ctx = cvs.getContext("2d");
-        ctx.textAlign = "center";
-        ctx.font = "90px Times New Roman";
-        for (i; i < words.length; i++) {
-          if (STATE == "RUNNING") {
-            ctx.fillText(words[i], cvs.width / 2, (cvs.height / 10) * 7, cvs.width);
-            console.log(speed);
-            await sleep(speed);
-            console.log(speed);
-            ctx.clearRect(0, 0, cvs.width, cvs.height);
-          } 
-          else if (STATE == "STOPPED") {
-            ctx.fillText(words[i], cvs.width / 2, (cvs.height / 10) * 7, cvs.width);
-            console.log(speed);
-            break;
-          }
-        }
-      }
-
-      function sleep(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-      }
-
-      function stop() {
-        STATE = "STOPPED";
-      }
-      function getWPM() {
-        slider = document.getElementById("slider").value;
-        speed = Math.floor(60000 / slider);
-        document.getElementById("wpm").value =
-          document.getElementById("slider").value;
-      }
-      function setWPM() {
-        document.getElementById("slider").value =
-          document.getElementById("wpm").value;
-      }
-      async function loadFile(file) {
-        let text = await file.text();
-        document.getElementById("ta").textContent = text;
-      }
-      //TODO: Add custom colour scheme.
-      
-      document.addEventListener('keypress', function(e) {
-        
-        if(e.keyCode === 32){
-          if(STATE === "RUNNING"){
-            STATE = "STOPPED";
-          }
-
-        }
-      });
-    </script>
-    
-    <style>
-      body {
-        background-color: #1d1919;
-        color: rgb(234, 247, 177);
-        font-family: Arial, Helvetica, sans-serif;
-      }
-      h1 {
-        margin-left: 2%;
-        margin-top: 5px;
-      }
-      .container {
-        display: flex;
-        flex-direction: row;
-        height: 100%;
-        align-items: stretch;
-      }
-      #flex1 {
-        width: 35%;
-        height: 100%;
-        padding-left: 2%;
-      }
-      #flex2 {
-        width: 50%;
-        height: 100%;
-        padding-right: 2%;
-      }
-      textarea {
-        width: 80%;
-        height: 75%;
-        background-color: #1d1919;
-        color: white;
-      }
-      canvas {
-        opacity: 100%;
-        width: 100%;
-        height: 75%;
-        background-color: rgb(77, 72, 67);
-        align-self: center;
-      }
-      .slidecontainer {
-        display: flex;
-        flex-direction: row;
-        width: 80%;
-      }
-      #wpm {
-        flex-grow: 0.2;
-        width: 5%;
-        align-self: center;
-        border-radius: 0.5em;
-        margin-bottom: 0.5em;
-      }
-      button {
-        flex-grow: 0.2;
-        width: 30%;
-        align-self: center;
-        border-radius: 0.5em;
-        margin-bottom: 0.5em;
-      }
-      .slider {
-        flex-grow: 2;
-        width: 40%;
-        background-color: #d3d3d3;
-        -webkit-transition: 0.2s;
-        transition: opacity 0.2s;
-      }
-    </style>
   </body>
 </html>

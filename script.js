@@ -1,23 +1,25 @@
 let cvs = document.getElementById("cvs");
-let STATE = "RUNNING";
-let i = null;
-let slider = null;
-let speed = null;
-slider = document.getElementById("slider").value;
-speed = Math.floor(60000 / slider);
+var STATE = "";
+var i = null;
+var slider = null;
+var speed = null;
 
 function submit() {
-  let textarea = document.getElementById("ta");
-  let text = textarea.value;
-  STATE = "RUNNING";
-  words = [];
-  words = text.split(" ");
-  write();
+  if (STATE === "" || STATE === "STOPPED") {
+    slider = document.getElementById("slider").value;
+    speed = Math.floor(60000 / slider);
+    console.log("worked");
+    var textarea = document.getElementById("ta");
+    var text = textarea.value;
+    STATE = "RUNNING";
+    words = [];
+    words = text.split(" ");
+    write();
+  }
 }
-
 async function write() {
-  let cvs = document.getElementById("cvs");
-  let ctx = cvs.getContext("2d");
+  var cvs = document.getElementById("cvs");
+  var ctx = cvs.getContext("2d");
   ctx.textAlign = "center";
   ctx.font = "90px Times New Roman";
   for (i; i < words.length; i++) {
@@ -42,8 +44,9 @@ function sleep(ms) {
 function stop() {
   STATE = "STOPPED";
 }
-sleep();
 function getWPM() {
+  slider = document.getElementById("slider").value;
+  speed = Math.floor(60000 / slider);
   document.getElementById("wpm").value =
     document.getElementById("slider").value;
 }
@@ -55,3 +58,12 @@ async function loadFile(file) {
   let text = await file.text();
   document.getElementById("ta").textContent = text;
 }
+//TODO: Add custom colour scheme.
+
+document.addEventListener("keypress", function (e) {
+  if (e.keyCode === 32) {
+    if (STATE === "RUNNING") {
+      STATE = "STOPPED";
+    }
+  }
+});
